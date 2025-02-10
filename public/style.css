@@ -288,6 +288,15 @@ footer .container {
   color: var(--text);
 }
 
+.lazy {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.lazy.loaded {
+  opacity: 1;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 20px;

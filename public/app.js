@@ -26,9 +26,10 @@ function renderBooks(booksToRender) {
 
     bookCard.innerHTML = `
       <img 
-        src="https://s3-us-west-1.amazonaws.com/com.numerade/books/${book.image_url}"
+        data-src="https://s3-us-west-1.amazonaws.com/com.numerade/books/${book.image_url}"
         alt="${book.title}"
-        class="book-cover"
+        class="book-cover lazy"
+        src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22><rect width=%221%22 height=%221%22 fill=%22%23374151%22/></svg>"
         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22><rect width=%221%22 height=%221%22 fill=%22%23374151%22/></svg>'"
       />
       <div class="book-info">
@@ -40,6 +41,30 @@ function renderBooks(booksToRender) {
 
     booksGrid.appendChild(bookCard);
   });
+
+  initLazyLoading();
+}
+
+function initLazyLoading() {
+  const lazyImages = document.querySelectorAll("img.lazy");
+
+  const imageObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.classList.remove("lazy");
+          observer.unobserve(img);
+        }
+      });
+    },
+    {
+      rootMargin: "50px 0px",
+    }
+  );
+
+  lazyImages.forEach((img) => imageObserver.observe(img));
 }
 
 async function handleBookSelect(book) {
