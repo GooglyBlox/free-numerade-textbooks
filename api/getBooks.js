@@ -98,15 +98,18 @@ async function addBookToLibrary(page, bookId) {
   }
 }
 
-async function getBookPdfUrl(page) {
+async function getBookPdfUrl(page, bookId) {
   try {
-    const response = await page.evaluate(async () => {
+    const response = await page.evaluate(async (bookId) => {
       const res = await fetch(
         "https://www.numerade.com/api/v1/user/books?format=json"
       );
       const data = await res.json();
-      return data.results[0]?.book?.pdfUrl || null;
-    });
+      const matchingBook = data.results.find(
+        (result) => result.book.id === bookId
+      );
+      return matchingBook?.book?.pdfUrl || null;
+    }, bookId);
 
     return response;
   } catch (error) {
@@ -171,7 +174,7 @@ module.exports = async (req, res) => {
       throw new Error("Failed to add book to library");
     }
 
-    const pdfUrl = await getBookPdfUrl(page);
+    const pdfUrl = await getBookPdfUrl(page, bookId);
     if (!pdfUrl) {
       throw new Error("Failed to retrieve PDF URL");
     }
