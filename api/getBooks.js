@@ -58,6 +58,26 @@ async function performLogin(page) {
   }
 }
 
+async function checkBookExists(page, bookId) {
+  try {
+    const response = await page.evaluate(async (bookId) => {
+      const res = await fetch(
+        "https://www.numerade.com/api/v1/user/books?format=json"
+      );
+      const data = await res.json();
+      const matchingBook = data.results.find(
+        (result) => result.book.id === bookId
+      );
+      return matchingBook?.book?.pdfUrl || null;
+    }, bookId);
+
+    return response;
+  } catch (error) {
+    console.error("Failed to check book existence:", error);
+    return null;
+  }
+}
+
 async function addBookToLibrary(page, bookId) {
   try {
     const cookies = await page.cookies();
@@ -95,26 +115,6 @@ async function addBookToLibrary(page, bookId) {
   } catch (error) {
     console.error("Failed to add book:", error);
     return false;
-  }
-}
-
-async function getBookPdfUrl(page, bookId) {
-  try {
-    const response = await page.evaluate(async (bookId) => {
-      const res = await fetch(
-        "https://www.numerade.com/api/v1/user/books?format=json"
-      );
-      const data = await res.json();
-      const matchingBook = data.results.find(
-        (result) => result.book.id === bookId
-      );
-      return matchingBook?.book?.pdfUrl || null;
-    }, bookId);
-
-    return response;
-  } catch (error) {
-    console.error("Failed to get PDF URL:", error);
-    return null;
   }
 }
 
@@ -169,12 +169,21 @@ module.exports = async (req, res) => {
       throw new Error("Authentication failed");
     }
 
+    const existingPdfUrl = await checkBookExists(page, bookId);
+    if (existingPdfUrl) {
+      await browser.close();
+      return res.json({
+        success: true,
+        pdfUrl: existingPdfUrl,
+      });
+    }
+
     const addBookSuccess = await addBookToLibrary(page, bookId);
     if (!addBookSuccess) {
       throw new Error("Failed to add book to library");
     }
 
-    const pdfUrl = await getBookPdfUrl(page, bookId);
+    const pdfUrl = await checkBookExists(page, bookId);
     if (!pdfUrl) {
       throw new Error("Failed to retrieve PDF URL");
     }
