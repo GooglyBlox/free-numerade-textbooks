@@ -10,6 +10,10 @@ While poking around Numerade's undocumented APIs, I found endpoints that give ac
 
 This project lets you browse and access these textbooks using their own API. You'll need a premium Numerade account though.
 
+## API Documentation
+
+I've documented the API endpoints used in this project, along with other discovered endpoints, in this [GitHub Gist](https://gist.github.com/GooglyBlox/af1dc039eeafbc54de51d1d047213a95). The documentation is a work in progress and will be updated as new endpoints are discovered.
+
 ## Deployment
 
 This project is designed to be deployed on Vercel. To deploy:
