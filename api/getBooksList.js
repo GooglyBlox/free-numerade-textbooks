@@ -25,18 +25,18 @@ module.exports = async (req, res) => {
 
       response.on("end", () => {
         try {
-          const books = JSON.parse(data);
-          res.json(books);
+          const { books, topics, curriculum } = JSON.parse(data);
+          res.json({ books, topics, curriculum });
         } catch (error) {
           console.error("Failed to parse response:", error);
-          res.status(500).json({ error: "Failed to parse books data" });
+          res.status(500).json({ error: "Failed to parse data" });
         }
       });
     });
 
     request.on("error", (error) => {
       console.error("Request failed:", error);
-      res.status(500).json({ error: "Failed to fetch books" });
+      res.status(500).json({ error: "Failed to fetch data" });
     });
 
     request.end();
