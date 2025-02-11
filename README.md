@@ -17,6 +17,10 @@ This project is designed to be deployed on Vercel. To deploy:
 1. Fork this repository
 2. Create a new project on Vercel
 3. Add your environment variables
+```
+NUMERADE_EMAIL=your_premium_email
+NUMERADE_PASSWORD=your_premium_password
+```
 4. Deploy!
 
 ## Disclaimer
