@@ -479,6 +479,13 @@ body {
   background: var(--text-secondary);
 }
 
+.sidebar-header .logo {
+  height: 24px;
+  width: auto;
+  margin-bottom: 8px;
+  filter: brightness(0) invert(1);
+}
+
 @media (max-width: 1024px) {
   .filter-group {
     border: 1px solid var(--border);
