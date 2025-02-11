@@ -32,3 +32,5 @@ NUMERADE_PASSWORD=your_premium_password
 This project is a proof-of-concept demonstration of API exploration and public resource accessibility. It is intended for educational and research purposes only. Users are responsible for ensuring their use of this tool complies with applicable terms of service and laws.
 
 This project is not affiliated with, endorsed by, or sponsored by Numerade.
+
+Concerns? Takedown request? Questions? Contact me at googlyblox@gmail.com!
